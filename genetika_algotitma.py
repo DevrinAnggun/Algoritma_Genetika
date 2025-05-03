@@ -82,8 +82,7 @@ def jalankan_GA():
         if hitung_fitness(terbaik_generasi) > hitung_fitness(terbaik):
             terbaik = terbaik_generasi
 
-        populasi_baru = [terbaik]
-
+        populasi_baru = [terbaik] # elitisme
         while len(populasi_baru) < POPULASI_SIZE:
             ortu1 = seleksi_turnamen(populasi)
             ortu2 = seleksi_turnamen(populasi)
