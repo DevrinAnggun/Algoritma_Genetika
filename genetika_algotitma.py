@@ -103,5 +103,5 @@ def jalankan_GA():
     print(f"f(x1, x2) = {nilai:.5f}")
 
 # EKSEKUSI PROGRAM
-if __name__ == "_main_":
+if __name__ == "__main__":
     jalankan_GA()
