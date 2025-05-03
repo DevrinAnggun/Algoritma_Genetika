@@ -49,3 +49,59 @@ def seleksi_turnamen(populasi, k=3):
     kandidat = random.sample(populasi, k)
     kandidat.sort(key=hitung_fitness, reverse=True)
     return kandidat[0]
+
+# Crossover satu titik
+def crossover(parent1, parent2):
+    if random.random() < PROB_CROSSOVER:
+        titik = random.randint(1, PANJANG_KROMOSOM - 1)
+        anak1 = parent1[:titik] + parent2[titik:]
+        anak2 = parent2[:titik] + parent1[titik:]
+        return anak1, anak2
+    else:
+        return parent1, parent2
+
+# Mutasi bit-flip
+def mutasi(kromosom):
+    krom_baru = ''
+    for bit in kromosom:
+        if random.random() < PROB_MUTASI:
+            krom_baru += '0' if bit == '1' else '1'
+        else:
+            krom_baru += bit
+    return krom_baru
+
+# PROSES UTAMA: ALGORITMA GENETIKA
+def jalankan_GA():
+    populasi = inisialisasi_populasi()
+    terbaik = populasi[0]
+
+    for generasi in range(GENERASI_MAX):
+        populasi.sort(key=hitung_fitness, reverse=True)
+        terbaik_generasi = populasi[0]
+
+        if hitung_fitness(terbaik_generasi) > hitung_fitness(terbaik):
+            terbaik = terbaik_generasi
+
+        populasi_baru = [terbaik]
+
+        while len(populasi_baru) < POPULASI_SIZE:
+            ortu1 = seleksi_turnamen(populasi)
+            ortu2 = seleksi_turnamen(populasi)
+            anak1, anak2 = crossover(ortu1, ortu2)
+            anak1 = mutasi(anak1)
+            anak2 = mutasi(anak2)
+            populasi_baru.extend([anak1, anak2])
+
+        populasi = populasi_baru[:POPULASI_SIZE]
+
+    # Output hasil terbaik
+    x1, x2 = decode_kromosom(terbaik)
+    nilai = fungsi_objektif(x1, x2)
+    print("=== HASIL AKHIR ===")
+    print("Kromosom terbaik :", terbaik)
+    print(f"x1 = {x1:.5f}, x2 = {x2:.5f}")
+    print(f"f(x1, x2) = {nilai:.5f}")
+
+# EKSEKUSI PROGRAM
+if _name_ == "_main_":
+    jalankan_GA()
